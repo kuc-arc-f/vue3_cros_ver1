@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<!-- -->
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script type="text/javascript" src="./js/axios.min.js"></script>
+    <script type="text/javascript" src="./js/com_util.js"></script>
+<body>
+<div style="background: #FFF;">
+	<ul>
+		<li><a href="index.html">Tasks</a></li>
+	</ul>
+</div>
+<h2>Create a tasks item</h2>
+<hr />
+<div id="app">
+    <div class="card" v-if="item">
+        <div class="card-body">
+            <div>
+                <p>ID: {{item.id }}</p>
+                <h1 class="card-title">{{item.title}}</h1>
+                <div class="card-text">{{item.content}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -->
+<script>
+var baseUrl = 'http://127.0.0.1/code-3/';
+console.log(baseUrl)
+//
+var app = new Vue({
+    el: '#app',
+    created() {
+        var dat = exStorage.load(sysConst.STORAGE_KEY_pageId )
+        console.log(dat.length )
+        if(dat.length < 1){
+            alert('表示IDの取得に失敗しました。');
+        }else{
+            this.task_id= dat[0].id
+        }
+    },    
+    data: {
+        item : [],
+        task_id: 0,
+    },
+    mounted: function() {
+        this.getItem();
+    },    
+    methods: {
+        getItem() {
+            var url = this.conv_url('api/tasks/show/'+ this.task_id)
+            console.log(url)
+            axios.get(url)
+            .then(res =>  {
+                this.item = res.data
+//                console.log(res.data )
+            })
+        },
+        conv_url(url) {
+            return baseUrl + url
+        },
+    }    
+});
+</script>
+</body>
+<script>
+</script>
+</html>
